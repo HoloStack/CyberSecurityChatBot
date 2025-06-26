@@ -1,4 +1,4 @@
-namespace chat.ChatBot;
+namespace CybersecurityChatbot;
 public class ResponcesList
 {
     public static Dictionary<string, List<string>> keywordResponses = new Dictionary<string, List<string>> {
