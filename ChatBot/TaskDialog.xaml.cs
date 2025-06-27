@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -15,19 +16,43 @@ namespace CybersecurityChatbot
         {
             InitializeComponent();
 
-            // Enable/disable custom reminder textbox based on radio button
-            CustomRadio.Checked += (s, e) => CustomReminderRichTextBox.IsEnabled = true;
-            CustomRadio.Unchecked += (s, e) => CustomReminderRichTextBox.IsEnabled = false;
+            // Enable/disable quick options panel based on radio button
+            QuickOptionsRadio.Checked += (s, e) => {
+                QuickOptionsPanel.IsEnabled = true;
+                ExactTimePanel.IsEnabled = false;
+            };
+            QuickOptionsRadio.Unchecked += (s, e) => QuickOptionsPanel.IsEnabled = false;
+            
+            // Enable/disable exact time panel based on radio button
+            ExactTimeRadio.Checked += (s, e) => {
+                ExactTimePanel.IsEnabled = true;
+                QuickOptionsPanel.IsEnabled = false;
+                UpdateSelectedTimeDisplay();
+            };
+            ExactTimeRadio.Unchecked += (s, e) => ExactTimePanel.IsEnabled = false;
+            
+            // No reminder radio button
+            NoReminderRadio.Checked += (s, e) => {
+                QuickOptionsPanel.IsEnabled = false;
+                ExactTimePanel.IsEnabled = false;
+            };
             
             // Clear placeholder text when focused and set up proper input
             SetupRichTextBox(TitleRichTextBox, "Enable two-factor authentication");
             SetupRichTextBox(DescriptionRichTextBox, "Set up two-factor authentication on all important accounts to add an extra layer of security.");
-            SetupRichTextBox(CustomReminderRichTextBox, "e.g., in 2 weeks, next month, etc.");
             
             // Add Enter key support for submitting the task
             TitleRichTextBox.KeyDown += RichTextBox_KeyDown;
             DescriptionRichTextBox.KeyDown += RichTextBox_KeyDown;
-            CustomReminderRichTextBox.KeyDown += RichTextBox_KeyDown;
+            
+            // Set up date/time picker events
+            ReminderDatePicker.SelectedDateChanged += (s, e) => UpdateSelectedTimeDisplay();
+            HourComboBox.SelectionChanged += (s, e) => UpdateSelectedTimeDisplay();
+            MinuteComboBox.SelectionChanged += (s, e) => UpdateSelectedTimeDisplay();
+            AmPmComboBox.SelectionChanged += (s, e) => UpdateSelectedTimeDisplay();
+            
+            // Initialize date picker to tomorrow
+            ReminderDatePicker.SelectedDate = DateTime.Today.AddDays(1);
             
             // Set focus to title field and make CREATE TASK button default
             TitleRichTextBox.Focus();
@@ -93,68 +118,129 @@ namespace CybersecurityChatbot
             {
                 ReminderTime = "No reminder set";
             }
-            else if (TomorrowRadio.IsChecked == true)
+            else if (QuickOptionsRadio.IsChecked == true)
             {
-                ReminderTime = "Reminder set for tomorrow";
-            }
-            else if (ThreeDaysRadio.IsChecked == true)
-            {
-                ReminderTime = "Reminder set for 3 days from now";
-            }
-            else if (OneWeekRadio.IsChecked == true)
-            {
-                ReminderTime = "Reminder set for 1 week from now";
-            }
-            else if (CustomRadio.IsChecked == true)
-            {
-                var customText = GetRichTextBoxText(CustomReminderRichTextBox).Trim();
-                if (string.IsNullOrWhiteSpace(customText) || customText == "e.g., in 2 weeks, next month, etc.")
+                if (QuickReminderComboBox.SelectedItem is ComboBoxItem selectedItem)
                 {
-                    MessageBox.Show("Please enter a custom reminder time.", "Missing Information", 
+                    var tag = selectedItem.Tag.ToString();
+                    switch (tag)
+                    {
+                        case "tomorrow_9am":
+                            ReminderTime = "Reminder set for tomorrow at 9:00 AM";
+                            break;
+                        case "3days_9am":
+                            ReminderTime = "Reminder set for 3 days from now at 9:00 AM";
+                            break;
+                        case "1week_9am":
+                            ReminderTime = "Reminder set for 1 week from now at 9:00 AM";
+                            break;
+                        case "30seconds":
+                            ReminderTime = "Reminder set for 30 seconds from now (testing)";
+                            break;
+                        default:
+                            ReminderTime = "Reminder set for 3 days from now at 9:00 AM";
+                            break;
+                    }
+                }
+                else
+                {
+                    ReminderTime = "Reminder set for 3 days from now at 9:00 AM";
+                }
+            }
+            else if (ExactTimeRadio.IsChecked == true)
+            {
+                var selectedDateTime = GetSelectedReminderDateTime();
+                if (selectedDateTime.HasValue)
+                {
+                    if (selectedDateTime.Value <= DateTime.Now)
+                    {
+                        MessageBox.Show("Please select a future date and time for the reminder.", "Invalid Time", 
+                            MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+                    ReminderTime = $"Reminder set for {selectedDateTime.Value:dddd, MMMM dd, yyyy 'at' h:mm tt}";
+                }
+                else
+                {
+                    MessageBox.Show("Please select a valid date and time for the reminder.", "Missing Information", 
                         MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
-                ReminderTime = $"Reminder set for: {customText}";
             }
 
-            // Create Windows reminder if not "No reminder"
-            if (!NoReminderRadio.IsChecked == true)
+            // Create reminder using the new ReminderService if not "No reminder"
+            if (NoReminderRadio.IsChecked != true)
             {
                 try
                 {
-                    var success = WindowsReminderService.CreateWindowsReminder(
-                        TaskTitle, 
-                        TaskDescription, 
-                        ReminderTime, 
-                        userProfile.Name);
-                        
-                    if (success)
+                    DateTime reminderDateTime;
+                    
+                    if (QuickOptionsRadio.IsChecked == true)
                     {
-                        var timeDesc = WindowsReminderService.GetReminderTimeDescription(ReminderTime);
-                        MessageBox.Show(
-                            $"✅ Task created successfully!\n\n" +
-                            $"📝 Task: {TaskTitle}\n" +
-                            $"⏰ Windows reminder set for: {timeDesc}\n\n" +
-                            $"You will receive a notification when it's time to complete this task.", 
-                            "Task Created", 
-                            MessageBoxButton.OK, 
-                            MessageBoxImage.Information);
+                        string reminderInput = "";
+                        if (QuickReminderComboBox.SelectedItem is ComboBoxItem selectedItem)
+                        {
+                            var tag = selectedItem.Tag.ToString();
+                            switch (tag)
+                            {
+                                case "tomorrow_9am":
+                                    reminderInput = "tomorrow 9:00 AM";
+                                    break;
+                                case "3days_9am":
+                                    reminderInput = "in 3 days 9:00 AM";
+                                    break;
+                                case "1week_9am":
+                                    reminderInput = "in 1 week 9:00 AM";
+                                    break;
+                                case "30seconds":
+                                    reminderInput = "in 30 seconds";
+                                    break;
+                                default:
+                                    reminderInput = "in 3 days 9:00 AM";
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            reminderInput = "in 3 days 9:00 AM";
+                        }
+                        reminderDateTime = ReminderService.ParseReminderTime(reminderInput);
+                    }
+                    else if (ExactTimeRadio.IsChecked == true)
+                    {
+                        var selectedDateTime = GetSelectedReminderDateTime();
+                        if (selectedDateTime.HasValue)
+                        {
+                            reminderDateTime = selectedDateTime.Value;
+                        }
+                        else
+                        {
+                            throw new Exception("No valid date/time selected");
+                        }
                     }
                     else
                     {
-                        MessageBox.Show(
-                            $"✅ Task created successfully!\n\n" +
-                            $"⚠️ Note: Could not create Windows reminder, but your task has been saved.", 
-                            "Task Created", 
-                            MessageBoxButton.OK, 
-                            MessageBoxImage.Warning);
+                        // Fallback to default
+                        reminderDateTime = ReminderService.ParseReminderTime("in 3 days 9:00 AM");
                     }
+                    
+                    ReminderService.AddReminder(TaskTitle, $"Time to work on: {TaskTitle}", reminderDateTime);
+                    
+                    MessageBox.Show(
+                        $"✅ Task created successfully!\n\n" +
+                        $"📝 Task: {TaskTitle}\n" +
+                        $"⏰ Background reminder set for: {reminderDateTime:MMM dd, yyyy h:mm tt}\n\n" +
+                        $"You will receive a modern popup notification when it's time to complete this task.", 
+                        "Task Created", 
+                        MessageBoxButton.OK, 
+                        MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(
                         $"✅ Task created successfully!\n\n" +
-                        $"⚠️ Note: Could not create Windows reminder: {ex.Message}", 
+                        $"⚠️ Note: Could not create background reminder: {ex.Message}\n" +
+                        $"Your task has been saved without a reminder.", 
                         "Task Created", 
                         MessageBoxButton.OK, 
                         MessageBoxImage.Warning);
@@ -197,28 +283,48 @@ namespace CybersecurityChatbot
             {
                 reminderText = "No reminder";
             }
-            else if (TomorrowRadio.IsChecked == true)
+            else if (QuickOptionsRadio.IsChecked == true)
             {
-                reminderText = "Tomorrow";
-            }
-            else if (ThreeDaysRadio.IsChecked == true)
-            {
-                reminderText = "In 3 days";
-            }
-            else if (OneWeekRadio.IsChecked == true)
-            {
-                reminderText = "In 1 week";
-            }
-            else if (CustomRadio.IsChecked == true)
-            {
-                var customText = GetRichTextBoxText(CustomReminderRichTextBox).Trim();
-                if (string.IsNullOrWhiteSpace(customText) || customText == "e.g., in 2 weeks, next month, etc.")
+                if (QuickReminderComboBox.SelectedItem is ComboBoxItem selectedItem)
                 {
-                    MessageBox.Show("Please enter a custom reminder time.", "Missing Information", 
+                    var tag = selectedItem.Tag.ToString();
+                    switch (tag)
+                    {
+                        case "tomorrow_9am":
+                            reminderText = "Tomorrow at 9:00 AM";
+                            break;
+                        case "3days_9am":
+                            reminderText = "In 3 days at 9:00 AM";
+                            break;
+                        case "1week_9am":
+                            reminderText = "In 1 week at 9:00 AM";
+                            break;
+                        case "30seconds":
+                            reminderText = "In 30 seconds (testing)";
+                            break;
+                        default:
+                            reminderText = "In 3 days at 9:00 AM";
+                            break;
+                    }
+                }
+                else
+                {
+                    reminderText = "In 3 days at 9:00 AM";
+                }
+            }
+            else if (ExactTimeRadio.IsChecked == true)
+            {
+                var selectedDateTime = GetSelectedReminderDateTime();
+                if (selectedDateTime.HasValue)
+                {
+                    reminderText = selectedDateTime.Value.ToString("dddd, MMMM dd, yyyy 'at' h:mm tt");
+                }
+                else
+                {
+                    MessageBox.Show("Please select a valid date and time for the reminder.", "Missing Information", 
                         MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
-                reminderText = customText;
             }
 
             // Create the reminder message
@@ -264,6 +370,56 @@ namespace CybersecurityChatbot
             {
                 // Silently handle logging errors
             }
+        }
+
+        private void UpdateSelectedTimeDisplay()
+        {
+            if (ReminderDatePicker.SelectedDate.HasValue && 
+                HourComboBox.SelectedItem is ComboBoxItem hourItem &&
+                MinuteComboBox.SelectedItem is ComboBoxItem minuteItem &&
+                AmPmComboBox.SelectedItem is ComboBoxItem ampmItem)
+            {
+                var date = ReminderDatePicker.SelectedDate.Value;
+                var hour = int.Parse(hourItem.Tag.ToString());
+                var minute = int.Parse(minuteItem.Tag.ToString());
+                var ampm = ampmItem.Tag.ToString();
+                
+                // Convert to 24-hour format
+                if (ampm == "PM" && hour != 12)
+                    hour += 12;
+                else if (ampm == "AM" && hour == 12)
+                    hour = 0;
+                
+                var reminderDateTime = new DateTime(date.Year, date.Month, date.Day, hour, minute, 0);
+                SelectedTimeDisplay.Text = $"Selected: {reminderDateTime:dddd, MMMM dd, yyyy 'at' h:mm tt}";
+            }
+            else
+            {
+                SelectedTimeDisplay.Text = "Selected: (No date/time selected)";
+            }
+        }
+        
+        private DateTime? GetSelectedReminderDateTime()
+        {
+            if (ReminderDatePicker.SelectedDate.HasValue && 
+                HourComboBox.SelectedItem is ComboBoxItem hourItem &&
+                MinuteComboBox.SelectedItem is ComboBoxItem minuteItem &&
+                AmPmComboBox.SelectedItem is ComboBoxItem ampmItem)
+            {
+                var date = ReminderDatePicker.SelectedDate.Value;
+                var hour = int.Parse(hourItem.Tag.ToString());
+                var minute = int.Parse(minuteItem.Tag.ToString());
+                var ampm = ampmItem.Tag.ToString();
+                
+                // Convert to 24-hour format
+                if (ampm == "PM" && hour != 12)
+                    hour += 12;
+                else if (ampm == "AM" && hour == 12)
+                    hour = 0;
+                
+                return new DateTime(date.Year, date.Month, date.Day, hour, minute, 0);
+            }
+            return null;
         }
 
         private string GetRichTextBoxText(RichTextBox richTextBox)

@@ -40,7 +40,8 @@ Without the API key, ChatGPT features will be disabled, but all other chatbot fe
 
 ### Prerequisites
 - .NET 8.0 or later
-- Windows OS (for notification features)
+- Windows OS (for notification features and audio greeting)
+- Audio output device (speakers/headphones) for greeting sound
 - Visual Studio 2022 or VS Code (optional)
 
 ### Installation & Running
@@ -51,12 +52,67 @@ cd ChatBot
 # Build the application
 dotnet build
 
-# Run GUI version (default)
+# Run GUI version (default) - plays greeting.wav on startup
 dotnet run
 
-# Run console version
+# Run console version - also plays greeting.wav on startup
 dotnet run --console
 ```
+
+### 🔊 **Audio Features**
+- **Greeting Sound**: Both GUI and console versions play `Audio/greetings.wav` on startup
+- **Fallback Audio**: If greetings.wav is missing, system sounds are used as fallback
+- **Audio Location**: All audio files are organized in the `Audio/` folder
+- **Custom Audio**: Replace `greetings.wav` with your own welcome message
+
+### ⏰ **Advanced Reminder System**
+
+This application features a sophisticated background reminder service that runs even when the app is closed:
+
+#### **Key Features:**
+- **🔄 Background Service**: Runs continuously to monitor reminders
+- **🚀 Auto-Start**: Automatically starts with Windows (configurable)
+- **💬 Natural Language**: Parse human-friendly time inputs
+- **📅 Precise Date/Time Selection**: Advanced GUI controls for exact scheduling
+- **🎨 Modern Popups**: Beautiful, non-intrusive reminder windows
+- **⏰ Smart Scheduling**: Handles complex time patterns and scheduling
+- **🔔 Fallback Notifications**: Windows system notifications as backup
+
+#### **Natural Language Time Parsing:**
+```bash
+# Relative times
+"in 5 minutes", "in 2 hours", "in 3 days", "in 1 week"
+
+# Specific days
+"tomorrow", "monday", "friday", "next week"
+
+# Time modifiers
+"tomorrow morning", "tomorrow evening", "later today"
+
+# Absolute times (when combined)
+"3:30 PM tomorrow", "next Monday at 9 AM"
+```
+
+#### **Reminder Modes:**
+```bash
+# GUI Mode (default) - Full interface + background service
+dotnet run
+
+# Console Mode - Terminal interface + background service  
+dotnet run --console
+
+# Background Service Only - No interface, just reminder monitoring
+dotnet run --background
+```
+
+#### **Modern Reminder Popup Features:**
+- **📍 Smart Positioning**: Appears in bottom-right corner
+- **⚡ Smooth Animations**: Slide-in/slide-out effects
+- **🎨 Professional Design**: Modern, non-intrusive appearance
+- **⏰ Auto-Close**: Automatically closes after 30 seconds
+- **🔄 Action Buttons**: Snooze (10 min), Mark Complete, Dismiss
+- **🔊 Audio Alert**: System notification sound on appearance
+- **🚫 Non-Stealing Focus**: Doesn't interrupt current work
 
 ## 🧠 **LLM & NLP FEATURES - TESTING GUIDE FOR LECTURERS**
 

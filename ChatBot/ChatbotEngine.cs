@@ -66,12 +66,19 @@ namespace CybersecurityChatbot
             // Log NLP interaction
             LogActivity($"NLP processing: '{input}'");
             
-            // Enhanced NLP for task management
+            // Enhanced NLP for direct task creation with timing
+            if (ContainsAdvancedTaskCreation(inputLower))
+            {
+                LogActivity("NLP: Recognized advanced task creation intent");
+                return HandleAdvancedTaskCreation(input);
+            }
+            
+            // Enhanced NLP for basic task management
             if (ContainsKeywords(inputLower, new[] {"add", "create", "new"}, new[] {"task", "reminder", "todo"}) ||
                 ContainsKeywords(inputLower, new[] {"remind me", "set reminder"}))
             {
-                LogActivity("NLP: Recognized task creation intent");
-                return "I'll help you create a new cybersecurity task! Please use the 'Add New Task' button on the right to set up your task with specific date and time for notifications.";
+                LogActivity("NLP: Recognized basic task creation intent");
+                return "I'll help you create a new cybersecurity task! You can say something like 'create a task in 10 minutes to enable 2FA' or 'remind me in 1 day and 2 hours to secure my network'. Or use the 'Add New Task' button for more options.";
             }
             
             // Handle task completion through natural language
@@ -401,6 +408,180 @@ namespace CybersecurityChatbot
             }
             
             return null;
+        }
+        
+        private bool ContainsAdvancedTaskCreation(string input)
+        {
+            // Pattern 1: "create a task in X time to Y"
+            if (input.Contains("create a task in") && input.Contains(" to "))
+                return true;
+                
+            // Pattern 2: "remind me in X time to Y"
+            if (input.Contains("remind me in") && input.Contains(" to "))
+                return true;
+                
+            // Pattern 3: "set a task for X time to Y"
+            if (input.Contains("set a task for") && input.Contains(" to "))
+                return true;
+                
+            // Pattern 4: "create task in X to Y"
+            if (input.Contains("create task in") && input.Contains(" to "))
+                return true;
+                
+            // Pattern 5: "add task in X to Y"
+            if (input.Contains("add task in") && input.Contains(" to "))
+                return true;
+                
+            // Pattern 6: "schedule task in X to Y"
+            if (input.Contains("schedule task in") && input.Contains(" to "))
+                return true;
+                
+            // Pattern 7: "set reminder in X to Y"
+            if (input.Contains("set reminder in") && input.Contains(" to "))
+                return true;
+                
+            // Pattern 8: "make a task in X to Y"
+            if (input.Contains("make a task in") && input.Contains(" to "))
+                return true;
+                
+            // Pattern 9: "set a reminder to X in Y" (IMPORTANT FIX)
+            if (input.Contains("set a reminder to") && input.Contains(" in "))
+                return true;
+                
+            // Pattern 10: "set reminder to X in Y"
+            if (input.Contains("set reminder to") && input.Contains(" in "))
+                return true;
+            
+            return false;
+        }
+        
+        private string HandleAdvancedTaskCreation(string input)
+        {
+            try
+            {
+                var (timeExpression, taskDescription) = ParseTaskCreationInput(input);
+                
+                if (string.IsNullOrEmpty(taskDescription))
+                {
+                    return "I understand you want to create a task, but I couldn't determine what the task should be. Please try saying something like 'create a task in 10 minutes to enable 2FA' or 'remind me in 1 day to secure my network'.";
+                }
+                
+                if (string.IsNullOrEmpty(timeExpression))
+                {
+                    return $"I understand you want to create a task '{taskDescription}', but when would you like to be reminded? You can say something like 'in 30 minutes', 'in 2 hours', 'tomorrow', or 'in 1 day and 3 hours'.";
+                }
+                
+                // Parse the time expression
+                var reminderTime = ReminderService.ParseReminderTime(timeExpression);
+                
+                // Create the task
+                var task = new TaskData
+                {
+                    Title = taskDescription,
+                    Description = $"Cybersecurity task: {taskDescription}",
+                    ReminderText = $"Reminder set for: {reminderTime:MMM dd, yyyy h:mm tt}",
+                    CreatedDate = DateTime.Now,
+                    Status = "Pending",
+                    Priority = "Medium",
+                    Category = "Cybersecurity",
+                    DueDate = reminderTime
+                };
+                
+                _tasks.Add(task);
+                SaveTasks();
+                
+                // Add to reminder service
+                ReminderService.AddReminder(taskDescription, $"Time to work on: {taskDescription}", reminderTime);
+                
+                LogActivity($"Created task via natural language: '{taskDescription}' for {reminderTime}");
+                
+                return $"✅ Perfect! I've created a task '{taskDescription}' with a reminder set for {reminderTime:MMM dd, yyyy} at {reminderTime:h:mm tt}.\n\n" +
+                       $"📱 You'll receive both a popup notification and a Windows notification when it's time to complete this task.\n\n" +
+                       $"💡 You can view and manage all your tasks using the 'View All Tasks' button on the right.";
+            }
+            catch (Exception ex)
+            {
+                LogActivity($"Error creating task via natural language: {ex.Message}");
+                return $"I had trouble creating that task: {ex.Message}. Please try using the 'Add New Task' button for more reliable task creation, or try rephrasing your request.";
+            }
+        }
+        
+        private (string timeExpression, string taskDescription) ParseTaskCreationInput(string input)
+        {
+            var lowerInput = input.ToLower();
+            
+            // Handle "set a reminder to X in Y" pattern specifically
+            if (lowerInput.Contains("set a reminder to") || lowerInput.Contains("set reminder to"))
+            {
+                var reminderToIndex = lowerInput.IndexOf("reminder to");
+                if (reminderToIndex != -1)
+                {
+                    var afterReminderTo = input.Substring(reminderToIndex + 11).Trim(); // "reminder to".Length = 11
+                    var reminderInIndex = afterReminderTo.IndexOf(" in ");
+                    
+                    if (reminderInIndex != -1)
+                    {
+                        var reminderTaskDescription = afterReminderTo.Substring(0, reminderInIndex).Trim();
+                        var reminderTimeExpression = afterReminderTo.Substring(reminderInIndex + 4).Trim(); // " in ".Length = 4
+                        return (reminderTimeExpression, reminderTaskDescription);
+                    }
+                }
+            }
+            
+            // Handle standard "X in Y to Z" patterns
+            var inIndex = -1;
+            var toIndex = -1;
+            
+            // Look for various patterns
+            var inPatterns = new[] { " in ", "task in ", "reminder in " };
+            var toPatterns = new[] { " to ", " to do ", " for " };
+            
+            foreach (var pattern in inPatterns)
+            {
+                var index = lowerInput.IndexOf(pattern);
+                if (index != -1)
+                {
+                    inIndex = index + pattern.Length;
+                    break;
+                }
+            }
+            
+            foreach (var pattern in toPatterns)
+            {
+                var index = lowerInput.IndexOf(pattern, inIndex > 0 ? inIndex : 0);
+                if (index != -1)
+                {
+                    toIndex = index;
+                    break;
+                }
+            }
+            
+            if (inIndex == -1 || toIndex == -1 || toIndex <= inIndex)
+            {
+                return ("", "");
+            }
+            
+            // Extract time expression (between "in" and "to")
+            var timeExpression = input.Substring(inIndex, toIndex - inIndex).Trim();
+            
+            // Extract task description (after "to")
+            var taskStart = toIndex;
+            while (taskStart < input.Length && (input[taskStart] == ' ' || input[taskStart] == 't' || input[taskStart] == 'o'))
+            {
+                taskStart++;
+            }
+            
+            var taskDescription = "";
+            if (taskStart < input.Length)
+            {
+                taskDescription = input.Substring(taskStart).Trim();
+                
+                // Clean up common prefixes
+                if (taskDescription.StartsWith("do "))
+                    taskDescription = taskDescription.Substring(3).Trim();
+            }
+            
+            return (timeExpression, taskDescription);
         }
         
         private string GetRecentActivitySummary()

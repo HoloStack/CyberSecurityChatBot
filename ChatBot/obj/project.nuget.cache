@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "yU6Zbs0cugU=",
+  "dgSpecHash": "iYyqjKxTFO4=",
   "success": true,
-  "projectFilePath": "C:\\Users\\lab_services_student\\source\\repos\\CyberSecurityChatBot\\ChatBot\\ChatBot.csproj",
+  "projectFilePath": "C:\\Users\\lab_services_student\\Source\\Repos\\CyberSecurityChatBot\\ChatBot\\ChatBot.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lab_services_student\\.nuget\\packages\\microsoft.extensions.configuration\\8.0.0\\microsoft.extensions.configuration.8.0.0.nupkg.sha512",
     "C:\\Users\\lab_services_student\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\8.0.0\\microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",

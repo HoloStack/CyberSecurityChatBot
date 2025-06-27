@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using CybersecurityChatbot.Audio;
 
 namespace CybersecurityChatbot
 {
@@ -59,6 +60,9 @@ namespace CybersecurityChatbot
                 httpClient.DefaultRequestHeaders.Clear();
                 httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_openAiApiKey}");
             }
+            
+            // Play greeting sound
+            _ = AudioService.PlayGreetingAsync();
             
         }
 
@@ -466,11 +470,14 @@ namespace CybersecurityChatbot
             {
                 try
                 {
+                    var currentLocation = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                    var executablePath = System.IO.Path.Combine(currentLocation ?? "", "ChatBot.exe");
+                    
                     var processInfo = new ProcessStartInfo
                     {
                         FileName = "cmd.exe",
-                        Arguments = "/K dotnet run --console",
-                        WorkingDirectory = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location),
+                        Arguments = $"/K \"{executablePath}\" --console",
+                        WorkingDirectory = currentLocation,
                         UseShellExecute = true
                     };
                     Process.Start(processInfo);
@@ -487,6 +494,93 @@ namespace CybersecurityChatbot
         {
             var taskCount = _chatbotEngine.GetTaskCount();
             TaskCountLabel.Text = $"{taskCount} Active Task{(taskCount != 1 ? "s" : "")}";
+        }
+        
+        // Enhanced task management helper methods
+        private bool ContainsTaskCompletion(string input)
+        {
+            var completionPatterns = new string[]
+            {
+                "mark as done", "mark as complete", "set to done", "set to complete",
+                "mark done", "mark complete", "finished", "completed",
+                "done with", "complete the", "finish the", "set done",
+                "mark the", "set the", "complete task"
+            };
+            
+            return completionPatterns.Any(pattern => input.Contains(pattern));
+        }
+        
+        private string HandleTaskCompletion(string input)
+        {
+            var tasks = _chatbotEngine.GetTasks().Where(t => t.Status != "Completed").ToList();
+            if (tasks.Count == 0)
+            {
+                return "You don't have any pending tasks to complete. Great job staying on top of your cybersecurity!";
+            }
+            
+            // Try to extract task keywords from the input
+            var taskKeywords = ExtractTaskKeywords(input);
+            
+            if (taskKeywords.Count > 0)
+            {
+                var matchedTask = FindTaskByKeywords(taskKeywords, tasks);
+                if (matchedTask != null)
+                {
+                    _chatbotEngine.CompleteTask(matchedTask);
+                    _chatbotEngine.LogActivity($"Completed task via natural language: {matchedTask.Title}");
+                    return $"✅ Excellent! Task '{matchedTask.Title}' has been marked as completed! Great job improving your cybersecurity posture!";
+                }
+                else
+                {
+                    return $"I couldn't find a task matching '{string.Join(" ", taskKeywords)}'. Here are your pending tasks:\n" +
+                           string.Join("\n", tasks.Select((t, i) => $"{i + 1}. {t.Title}")) +
+                           "\n\nPlease tell me which task you've completed.";
+                }
+            }
+            
+            // No keywords found, show available tasks
+            return "Which task have you completed? Here are your pending tasks:\n" +
+                   string.Join("\n", tasks.Select((t, i) => $"{i + 1}. {t.Title}")) +
+                   "\n\nYou can say something like 'mark the 2FA task as done' or 'completed the password task'.";
+        }
+        
+        private List<string> ExtractTaskKeywords(string input)
+        {
+            var keywords = new List<string>();
+            var taskKeywords = new[] { "2fa", "two-factor", "password", "backup", "update", "install", "enable", "disable", "configure", "setup", "vpn", "firewall", "antivirus", "encrypt", "scan", "patch", "authentication", "security", "reminder" };
+            
+            foreach (var keyword in taskKeywords)
+            {
+                if (input.Contains(keyword))
+                {
+                    keywords.Add(keyword);
+                }
+            }
+            
+            // Also try to extract task titles directly
+            var words = input.Split(' ');
+            for (int i = 0; i < words.Length; i++)
+            {
+                if ((words[i] == "the" || words[i] == "task") && i + 1 < words.Length)
+                {
+                    keywords.Add(words[i + 1]);
+                }
+            }
+            
+            return keywords;
+        }
+        
+        private TaskData FindTaskByKeywords(List<string> keywords, List<TaskData> tasks)
+        {
+            foreach (var task in tasks)
+            {
+                var taskText = (task.Title + " " + task.Description).ToLower();
+                if (keywords.Any(keyword => taskText.Contains(keyword.ToLower())))
+                {
+                    return task;
+                }
+            }
+            return null;
         }
 
         private string GetRichTextBoxText()

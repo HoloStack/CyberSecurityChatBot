@@ -107,6 +107,30 @@ namespace CybersecurityChatbot
             var selectedOption = AnswerOptionsPanel.Children.OfType<RadioButton>().FirstOrDefault(rb => rb.IsChecked == true);
             if (selectedOption == null) return; // Shouldn't happen, as button is disabled otherwise
 
+            var question = _questions[_currentIndex];
+            var userAnswerIndex = AnswerOptionsPanel.Children.IndexOf(selectedOption);
+            var isCorrect = userAnswerIndex == question.CorrectAnswerIndex;
+            
+            // Show immediate feedback for wrong answers
+            if (!isCorrect)
+            {
+                var feedbackMessage = $"❌ Incorrect!\n\n" +
+                                    $"✅ Correct Answer: {question.Options[question.CorrectAnswerIndex]}\n\n" +
+                                    $"📖 Explanation: {question.Explanation}";
+                
+                // Add "Why" explanation if available
+                if (!string.IsNullOrWhiteSpace(question.Why))
+                {
+                    feedbackMessage += $"\n\n💡 Why this is correct: {question.Why}";
+                }
+                
+                MessageBox.Show(feedbackMessage, "Quiz Feedback", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("✅ Correct! Well done!", "Quiz Feedback", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
             StoreAnswer(selectedOption);
             _currentIndex++;
 

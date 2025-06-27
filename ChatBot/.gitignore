@@ -314,3 +314,9 @@ appsettings.*.json
 # API Keys and secrets
 *.key
 secrets.json
+
+# Audio - Track source files but not generated ones
+!Audio/
+!Audio/greetings.wav
+!Audio/AudioService.cs
+Audio/*.tmp

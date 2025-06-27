@@ -114,38 +114,59 @@ namespace CybersecurityChatbot
         {
             if (TaskListView.SelectedItem is TaskData selectedTask)
             {
-                var result = MessageBox.Show(
-                    $"Mark task '{selectedTask.Title}' as completed?\n\n" +
-                    "This will change the task status to 'Completed' and set the completion date.", 
-                    "Complete Task", 
-                    MessageBoxButton.YesNo, 
-                    MessageBoxImage.Question);
-                
-                if (result == MessageBoxResult.Yes)
-                {
-                    selectedTask.Status = "Completed";
-                    selectedTask.CompletedDate = DateTime.Now;
-                    
-                    // Log the completion
-                    engine.LogActivity($"Completed task: '{selectedTask.Title}'");
-                    
-                    // Refresh the ListView
-                    TaskListView.Items.Refresh();
-                    UpdateButtonStates();
-                    
-                    // Save to JSON
-                    SaveTasksToJson();
-                    
-                    MessageBox.Show(
-                        $"🎉 Congratulations! Task '{selectedTask.Title}' completed!\n\n" +
-                        "Great job on improving your cybersecurity posture!", 
-                        "Task Completed", 
-                        MessageBoxButton.OK, 
-                        MessageBoxImage.Information);
-                    
-                    TasksUpdated?.Invoke();
-                }
+                CompleteSelectedTask(selectedTask);
             }
+        }
+        
+        public void CompleteSelectedTask(TaskData task)
+        {
+            var result = MessageBox.Show(
+                $"Mark task '{task.Title}' as completed?\n\n" +
+                "This will change the task status to 'Completed' and set the completion date.", 
+                "Complete Task", 
+                MessageBoxButton.YesNo, 
+                MessageBoxImage.Question);
+            
+            if (result == MessageBoxResult.Yes)
+            {
+                task.Status = "Completed";
+                task.CompletedDate = DateTime.Now;
+                
+                // Log the completion
+                engine.LogActivity($"Completed task: '{task.Title}'");
+                
+                // Refresh the ListView
+                TaskListView.Items.Refresh();
+                UpdateButtonStates();
+                
+                // Save to JSON
+                SaveTasksToJson();
+                
+                MessageBox.Show(
+                    $"🎉 Congratulations! Task '{task.Title}' completed!\n\n" +
+                    "Great job on improving your cybersecurity posture!", 
+                    "Task Completed", 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Information);
+                
+                TasksUpdated?.Invoke();
+            }
+        }
+        
+        // Method to complete task by name/keywords
+        public bool CompleteTaskByKeywords(string keywords)
+        {
+            var lowerKeywords = keywords.ToLower();
+            var matchedTask = originalTasks.FirstOrDefault(t => 
+                t.Status != "Completed" && 
+                (t.Title.ToLower().Contains(lowerKeywords) || t.Description.ToLower().Contains(lowerKeywords)));
+                
+            if (matchedTask != null)
+            {
+                CompleteSelectedTask(matchedTask);
+                return true;
+            }
+            return false;
         }
 
         private void DeleteTaskButton_Click(object sender, RoutedEventArgs e)

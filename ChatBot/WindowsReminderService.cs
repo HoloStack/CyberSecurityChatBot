@@ -173,5 +173,47 @@ namespace CybersecurityChatbot
             var remainingHours = (minutes % (24 * 60)) / 60;
             return remainingHours > 0 ? $"{days} day(s) and {remainingHours} hour(s)" : $"{days} day(s)";
         }
+        
+        public static void ShowNotification(string title, string message)
+        {
+            try
+            {
+                // Create a PowerShell script to show immediate notification
+                var script = $@"
+# Show immediate notification
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+
+$notification = New-Object System.Windows.Forms.NotifyIcon
+$notification.Icon = [System.Drawing.SystemIcons]::Information
+$notification.BalloonTipIcon = [System.Windows.Forms.ToolTipIcon]::Info
+$notification.BalloonTipTitle = ""{ title }""
+$notification.BalloonTipText = ""{ message }""
+$notification.Visible = $true
+$notification.ShowBalloonTip(5000)
+
+# Cleanup after showing
+Start-Sleep -Seconds 6
+$notification.Dispose()
+";
+                
+                var scriptPath = Path.Combine(Path.GetTempPath(), $"notification_{DateTime.Now.Ticks}.ps1");
+                File.WriteAllText(scriptPath, script, Encoding.UTF8);
+                
+                var processInfo = new ProcessStartInfo
+                {
+                    FileName = "powershell.exe",
+                    Arguments = $"-WindowStyle Hidden -ExecutionPolicy Bypass -File \"{scriptPath}\"",
+                    UseShellExecute = true,
+                    CreateNoWindow = true
+                };
+                
+                Process.Start(processInfo);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error showing notification: {ex.Message}");
+            }
+        }
     }
 }
