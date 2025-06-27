@@ -28,6 +28,9 @@ namespace CybersecurityChatbot
             [JsonPropertyName("explanation")]
             public string Explanation { get; set; } = "";
             
+            [JsonPropertyName("why")]
+            public string Why { get; set; } = "";
+            
             [JsonPropertyName("category")]
             public string Category { get; set; } = "";
         }
@@ -84,6 +87,7 @@ namespace CybersecurityChatbot
                                 Options = q.Options,
                                 CorrectAnswerIndex = q.CorrectAnswerIndex,
                                 Explanation = q.Explanation,
+                                Why = q.Why,
                                 Category = q.Category
                             });
                         }

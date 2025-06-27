@@ -10,6 +10,7 @@
       ],
       "correctAnswerIndex": 1,
       "explanation": "Strong passwords should be long (12+ characters), unique, and contain a mix of uppercase, lowercase, numbers, and symbols.",
+      "why": "Long, complex passwords are exponentially harder for attackers to crack using brute force methods. Each additional character and character type dramatically increases the time needed to break the password.",
       "category": "Passwords"
     },
     {
@@ -22,6 +23,7 @@
       ],
       "correctAnswerIndex": 2,
       "explanation": "Phishing is a social engineering attack where attackers impersonate legitimate entities to steal sensitive information like passwords or credit card numbers.",
+      "why": "Phishing exploits human trust and psychology. Attackers create convincing fake communications that appear to come from trusted sources, making people more likely to share sensitive information without proper verification.",
       "category": "Phishing"
     },
     {
@@ -34,6 +36,7 @@
       ],
       "correctAnswerIndex": 1,
       "explanation": "2FA adds an extra security layer by requiring something you know (password) and something you have (phone, token) or something you are (biometric).",
+      "why": "Even if your password is compromised, an attacker would still need access to your second factor (like your phone) to gain access to your account, making unauthorized access significantly more difficult.",
       "category": "Authentication"
     },
     {
@@ -46,6 +49,7 @@
       ],
       "correctAnswerIndex": 2,
       "explanation": "A firewall is a security tool that protects networks by controlling incoming and outgoing traffic. The others are all types of malicious software.",
+      "why": "Firewalls act as barriers between trusted internal networks and untrusted external networks, filtering traffic based on security rules to prevent unauthorized access while allowing legitimate traffic.",
       "category": "Malware"
     },
     {
@@ -58,6 +62,7 @@
       ],
       "correctAnswerIndex": 2,
       "explanation": "Never provide personal information via email. Legitimate organizations will never ask for sensitive data through email. Always verify through official channels.",
+      "why": "Email is an insecure communication method that can be intercepted or spoofed. Legitimate companies have secure channels for handling sensitive information and will never request it via email.",
       "category": "Email Security"
     },
     {
@@ -70,6 +75,7 @@
       ],
       "correctAnswerIndex": 1,
       "explanation": "Ransomware is malicious software that encrypts a victim's files and demands payment (ransom) for the decryption key to restore access.",
+      "why": "Ransomware is particularly dangerous because it makes data completely inaccessible and exploits the victim's need to recover important files, creating a situation where they might consider paying criminals.",
       "category": "Malware"
     },
     {
@@ -82,6 +88,7 @@
       ],
       "correctAnswerIndex": 1,
       "explanation": "Public Wi-Fi is inherently insecure. Using a VPN encrypts your traffic, and avoiding sensitive activities reduces risk of data interception.",
+      "why": "Public Wi-Fi networks are unsecured and can be easily monitored by attackers. VPNs create encrypted tunnels that protect your data even on compromised networks.",
       "category": "Network Security"
     },
     {
@@ -94,6 +101,7 @@
       ],
       "correctAnswerIndex": 1,
       "explanation": "Social engineering exploits human psychology rather than technical vulnerabilities to gain unauthorized access to systems or information.",
+      "why": "Humans are often the weakest link in security systems. Social engineering bypasses technical security by manipulating people's trust, fear, or desire to help, making it highly effective.",
       "category": "Social Engineering"
     },
     {
@@ -106,6 +114,7 @@
       ],
       "correctAnswerIndex": 2,
       "explanation": "Regular updates patch security vulnerabilities and fix bugs. Delaying updates leaves systems exposed to known threats that attackers can exploit.",
+      "why": "Software updates often include critical security patches that fix newly discovered vulnerabilities. Delaying updates leaves known security holes open for attackers to exploit.",
       "category": "System Security"
     },
     {
@@ -118,6 +127,7 @@
       ],
       "correctAnswerIndex": 1,
       "explanation": "A VPN creates an encrypted tunnel between your device and a VPN server, protecting your data from interception and hiding your IP address.",
+      "why": "VPNs encrypt all data transmission between your device and the VPN server, making it unreadable to anyone who might intercept it, providing privacy and security especially on untrusted networks.",
       "category": "Network Security"
     },
     {
@@ -130,6 +140,7 @@
       ],
       "correctAnswerIndex": 2,
       "explanation": "Malware often causes symptoms like slow performance, unexpected pop-ups, unusual network activity, and programs running without permission.",
+      "why": "Malware consumes system resources, displays unwanted advertisements for profit, and runs unauthorized processes, all of which degrade system performance and user experience.",
       "category": "Malware"
     },
     {
@@ -142,6 +153,7 @@
       ],
       "correctAnswerIndex": 2,
       "explanation": "Simple deletion or formatting doesn't permanently remove data. Secure wiping overwrites data multiple times, or physical destruction ensures data cannot be recovered.",
+      "why": "When files are deleted or drives are formatted, the data still exists on the storage medium and can be recovered using specialized tools. Secure wiping or physical destruction ensures data cannot be retrieved.",
       "category": "Data Security"
     },
     {
@@ -154,6 +166,7 @@
       ],
       "correctAnswerIndex": 1,
       "explanation": "Never open suspicious attachments. Verify with the sender using a different communication method. Many malware infections start with malicious email attachments.",
+      "why": "Email attachments are a common vector for malware distribution. Opening suspicious attachments can install viruses, ransomware, or other malicious software on your system.",
       "category": "Email Security"
     },
     {
@@ -166,6 +179,7 @@
       ],
       "correctAnswerIndex": 1,
       "explanation": "Least privilege limits user access rights to the minimum necessary for their role, reducing the potential impact of security breaches.",
+      "why": "By limiting access rights, if an account is compromised, the attacker can only access what that specific user needs for their job, minimizing potential damage to the organization.",
       "category": "Access Control"
     },
     {
@@ -178,6 +192,7 @@
       ],
       "correctAnswerIndex": 1,
       "explanation": "The 3-2-1 backup rule: 3 copies of data, 2 different storage types, 1 offsite backup. Encryption adds protection if storage media is compromised.",
+      "why": "Multiple backups protect against hardware failure, natural disasters, and theft. Different storage types and locations ensure data survives various scenarios, while encryption protects against unauthorized access.",
       "category": "Data Security"
     },
     {
@@ -190,6 +205,7 @@
       ],
       "correctAnswerIndex": 1,
       "explanation": "Zero-day vulnerabilities are security flaws unknown to software vendors, making them particularly dangerous as there's no patch available when they're discovered.",
+      "why": "Zero-day vulnerabilities are extremely dangerous because they can be exploited by attackers before security researchers or vendors even know they exist, leaving systems defenseless until a patch is developed.",
       "category": "Vulnerabilities"
     },
     {
@@ -202,6 +218,7 @@
       ],
       "correctAnswerIndex": 2,
       "explanation": "Encryption transforms readable data into coded format that can only be decrypted with the correct key, protecting it from unauthorized access.",
+      "why": "Encryption ensures that even if data is intercepted or stolen, it remains unreadable and useless to unauthorized parties without the decryption key, providing confidentiality.",
       "category": "Encryption"
     },
     {
@@ -214,6 +231,7 @@
       ],
       "correctAnswerIndex": 2,
       "explanation": "SQL injection attacks involve inserting malicious SQL statements into application entry fields to manipulate database operations and potentially access sensitive data.",
+      "why": "SQL injection exploits poor input validation in web applications, allowing attackers to manipulate database queries to extract, modify, or delete sensitive information.",
       "category": "Web Security"
     },
     {
@@ -226,6 +244,7 @@
       ],
       "correctAnswerIndex": 1,
       "explanation": "MFA requires multiple independent credentials (something you know, have, or are) to verify identity, significantly enhancing security beyond single-factor authentication.",
+      "why": "Using multiple authentication factors makes it exponentially harder for attackers to gain unauthorized access, as they would need to compromise multiple different security elements simultaneously.",
       "category": "Authentication"
     },
     {
@@ -238,6 +257,7 @@
       ],
       "correctAnswerIndex": 0,
       "explanation": "DDoS attacks flood a target system with massive amounts of traffic from multiple sources, overwhelming its capacity and making it unavailable to legitimate users.",
+      "why": "By using multiple sources to generate traffic, DDoS attacks can overwhelm even robust systems and are difficult to defend against, as blocking individual sources is ineffective when thousands are involved.",
       "category": "Network Attacks"
     },
     {
@@ -250,6 +270,7 @@
       ],
       "correctAnswerIndex": 1,
       "explanation": "Immediate action includes changing passwords, enabling 2FA, checking for unauthorized activities, and notifying relevant parties to minimize damage.",
+      "why": "Quick action prevents further unauthorized access and limits damage. Changing passwords locks out the attacker, while 2FA prevents future compromises even if passwords are stolen again.",
       "category": "Incident Response"
     },
     {
@@ -262,6 +283,7 @@
       ],
       "correctAnswerIndex": 1,
       "explanation": "Defense in depth involves implementing multiple, overlapping security measures to protect against threats, ensuring that if one layer fails, others provide protection.",
+      "why": "No single security measure is 100% effective. Multiple layers ensure that if attackers bypass one control, they still face additional barriers, significantly reducing the likelihood of successful attacks.",
       "category": "Security Strategy"
     },
     {
@@ -274,6 +296,7 @@
       ],
       "correctAnswerIndex": 1,
       "explanation": "Security audits systematically evaluate an organization's security policies, procedures, and controls to identify vulnerabilities and ensure compliance with standards.",
+      "why": "Regular security audits help organizations identify weaknesses before attackers do, ensure compliance with regulations, and verify that security controls are working as intended.",
       "category": "Security Management"
     },
     {
@@ -286,6 +309,7 @@
       ],
       "correctAnswerIndex": 1,
       "explanation": "A botnet is a network of infected computers (bots) controlled remotely by cybercriminals to perform malicious activities like DDoS attacks or cryptocurrency mining.",
+      "why": "Botnets leverage the combined power of thousands of compromised computers, making them extremely powerful tools for cybercriminals to conduct large-scale attacks while hiding their identity.",
       "category": "Malware"
     },
     {
@@ -298,6 +322,7 @@
       ],
       "correctAnswerIndex": 1,
       "explanation": "Juice jacking involves compromised USB ports that can steal data or install malware when you connect your device for charging.",
+      "why": "USB connections can carry both power and data. Malicious charging stations can exploit this to access your device's data or install malware while appearing to simply charge your device.",
       "category": "Mobile Security"
     }
   ]

@@ -61,8 +61,51 @@ namespace CybersecurityChatbot
         
         private string ProcessMessageInternal(string input)
         {
+            var inputLower = input.ToLower();
+            
+            // Log NLP interaction
+            LogActivity($"NLP processing: '{input}'");
+            
+            // Enhanced NLP for task management
+            if (ContainsKeywords(inputLower, new[] {"add", "create", "new"}, new[] {"task", "reminder", "todo"}) ||
+                ContainsKeywords(inputLower, new[] {"remind me", "set reminder"}))
+            {
+                LogActivity("NLP: Recognized task creation intent");
+                return "I'll help you create a new cybersecurity task! Please use the 'Add New Task' button on the right to set up your task with specific date and time for notifications.";
+            }
+            
+            // Handle task completion through natural language
+            var completionKeywords = new[] {"complete", "done", "finished", "mark as done", "mark complete", "finished with"};
+            if (ContainsAnyKeyword(inputLower, completionKeywords))
+            {
+                var taskKeywords = ExtractTaskKeywords(inputLower);
+                if (taskKeywords.Count > 0)
+                {
+                    var matchedTask = FindTaskByKeywords(taskKeywords);
+                    if (matchedTask != null)
+                    {
+                        CompleteTask(matchedTask);
+                        return $"✅ Great job! I've marked the task '{matchedTask.Title}' as completed. Keep up the excellent work with your cybersecurity practices!";
+                    }
+                    else
+                    {
+                        return $"I couldn't find a task matching '{string.Join(" ", taskKeywords)}'. Use the 'View All Tasks' button to see your current tasks and manage them.";
+                    }
+                }
+                else
+                {
+                    return "Which task would you like to mark as complete? You can say 'set [task name] to finished' or use the 'View All Tasks' button to manage your tasks.";
+                }
+            }
+            
+            // Handle showing tasks summary
+            if (ContainsKeywords(inputLower, new[] {"what have you done", "what did you do", "summary", "recent actions"}))
+            {
+                return GetRecentActivitySummary();
+            }
+            
             // Handle specific commands
-            if (input.Contains("add task") || input.Contains("create task"))
+            if (ContainsKeywords(inputLower, new[] {"add task", "create task"}))
             {
                 return "Please use the 'Add New Task' button on the right to create a new cybersecurity task with all the details and reminder options.";
             }
@@ -307,6 +350,95 @@ namespace CybersecurityChatbot
                 { "malware", new List<string> { "🦠 Keep your antivirus updated and run regular full system scans. Windows Defender is good, but consider Malwarebytes for additional protection." } },
                 { "2fa", new List<string> { "🔒 Enable two-factor authentication (2FA) on ALL important accounts - email, banking, social media. It's your best defense against account takeovers!" } }
             };
+        }
+        
+        // NLP Helper Methods
+        private bool ContainsKeywords(string input, string[] primaryKeywords, string[]? secondaryKeywords = null)
+        {
+            var hasPrimary = primaryKeywords.Any(keyword => input.Contains(keyword));
+            if (secondaryKeywords == null) return hasPrimary;
+            var hasSecondary = secondaryKeywords.Any(keyword => input.Contains(keyword));
+            return hasPrimary && hasSecondary;
+        }
+        
+        private bool ContainsAnyKeyword(string input, string[] keywords)
+        {
+            return keywords.Any(keyword => input.Contains(keyword));
+        }
+        
+        private List<string> ExtractTaskKeywords(string input)
+        {
+            // Remove completion keywords to focus on task identification
+            var cleanInput = input;
+            var removeWords = new[] {"set", "mark", "complete", "done", "finished", "to", "as", "the", "task", "reminder"};
+            
+            foreach (var word in removeWords)
+            {
+                cleanInput = cleanInput.Replace(" " + word + " ", " ").Replace(word + " ", "").Replace(" " + word, "");
+            }
+            
+            // Split and filter meaningful words
+            var words = cleanInput.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                                 .Where(w => w.Length > 2 && !removeWords.Contains(w.ToLower()))
+                                 .ToList();
+            
+            return words;
+        }
+        
+        private TaskData? FindTaskByKeywords(List<string> keywords)
+        {
+            // Try exact title match first
+            var keywordString = string.Join(" ", keywords).ToLower();
+            var exactMatch = _tasks.FirstOrDefault(t => t.Status != "Completed" && t.Title.ToLower().Contains(keywordString));
+            if (exactMatch != null) return exactMatch;
+            
+            // Try individual keyword matches
+            foreach (var keyword in keywords)
+            {
+                var match = _tasks.FirstOrDefault(t => t.Status != "Completed" && 
+                    (t.Title.ToLower().Contains(keyword.ToLower()) || t.Description.ToLower().Contains(keyword.ToLower())));
+                if (match != null) return match;
+            }
+            
+            return null;
+        }
+        
+        private string GetRecentActivitySummary()
+        {
+            var recentTasks = _tasks.Where(t => t.CreatedDate > DateTime.Now.AddDays(-7)).ToList();
+            var completedTasks = _tasks.Where(t => t.Status == "Completed" && t.CompletedDate > DateTime.Now.AddDays(-7)).ToList();
+            
+            var summary = "📊 Here's a summary of recent actions:\n\n";
+            
+            if (recentTasks.Count > 0)
+            {
+                summary += $"📝 Tasks created this week: {recentTasks.Count}\n";
+                foreach (var task in recentTasks.Take(3))
+                {
+                    summary += $"   • {task.Title} (Created: {task.CreatedDate:MMM dd})\n";
+                }
+            }
+            
+            if (completedTasks.Count > 0)
+            {
+                summary += $"\n✅ Tasks completed this week: {completedTasks.Count}\n";
+                foreach (var task in completedTasks.Take(3))
+                {
+                    summary += $"   • {task.Title} (Completed: {task.CompletedDate:MMM dd})\n";
+                }
+            }
+            
+            if (recentTasks.Count == 0 && completedTasks.Count == 0)
+            {
+                summary += "No recent activity. Start by creating a new cybersecurity task!";
+            }
+            else
+            {
+                summary += "\nKeep up the great work with your cybersecurity practices! 🛡️";
+            }
+            
+            LogActivity("Provided recent activity summary");
+            return summary;
         }
     }
 }

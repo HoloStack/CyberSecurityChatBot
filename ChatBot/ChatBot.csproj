@@ -6,7 +6,7 @@
     <UseWPF>true</UseWPF>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <StartupObject>CybersecurityChatbot.Program</StartupObject>
+<StartupObject>CybersecurityChatbot.App</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

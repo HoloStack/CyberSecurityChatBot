@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -19,7 +20,7 @@ namespace CybersecurityChatbot
         private UserProfile _userProfile;
         private int _bestQuizScore = 0;
         private static readonly HttpClient httpClient = new HttpClient();
-        private const string OPENAI_API_KEY = ""; // API key removed for security
+        private string _openAiApiKey = ""; // Loaded from config.json
         private DateTime _lastGPTRequest = DateTime.MinValue;
         private const int GPT_REQUEST_DELAY_SECONDS = 3; // Minimum 3 seconds between requests
 
@@ -49,8 +50,16 @@ namespace CybersecurityChatbot
             LoadChatHistory();
             UpdateTaskCount();
             
+            // Load API key from config.json
+            LoadApiKey();
+            
             // Configure HttpClient for OpenAI
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {OPENAI_API_KEY}");
+            if (!string.IsNullOrEmpty(_openAiApiKey))
+            {
+                httpClient.DefaultRequestHeaders.Clear();
+                httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_openAiApiKey}");
+            }
+            
         }
 
         private void InitializeChat()
@@ -340,6 +349,7 @@ namespace CybersecurityChatbot
             if (dialog.ShowDialog() == true)
             {
                 _chatbotEngine.AddTask(dialog.TaskTitle, dialog.TaskDescription, dialog.ReminderTime);
+                _chatbotEngine.LogActivity($"Created new task: '{dialog.TaskTitle}' with reminder: {dialog.ReminderTime}");
                 AddBotMessage($"✅ Task added: '{dialog.TaskTitle}'. {dialog.ReminderTime}");
                 UpdateTaskCount();
             }
@@ -348,6 +358,8 @@ namespace CybersecurityChatbot
         private void ViewTasksButton_Click(object sender, RoutedEventArgs e)
         {
             var tasks = _chatbotEngine.GetTasks();
+            _chatbotEngine.LogActivity($"Viewed task list - {tasks.Count} total tasks");
+            
             if (tasks.Count == 0)
             {
                 AddBotMessage("📝 You don't have any tasks yet. Use 'Add New Task' to create one!");
@@ -361,24 +373,37 @@ namespace CybersecurityChatbot
 
         private void StartQuizButton_Click(object sender, RoutedEventArgs e)
         {
+            _chatbotEngine.LogActivity("Started cybersecurity quiz");
             var quizWindow = new QuizWindow();
             quizWindow.QuizCompleted += (score, total) =>
             {
                 var percentage = (double)score / total * 100;
+                _chatbotEngine.LogActivity($"Completed quiz - Score: {score}/{total} ({percentage:F0}%)");
+                
                 if (score > _bestQuizScore)
                 {
                     _bestQuizScore = score;
                     QuizScoreLabel.Text = $"Best Score: {score}/{total} ({percentage:F0}%)";
+                    _chatbotEngine.LogActivity($"New best quiz score achieved: {score}/{total}");
                 }
                 
                 AddBotMessage($"🏆 Quiz completed! Score: {score}/{total} ({percentage:F0}%)");
                 
                 if (percentage >= 80)
+                {
                     AddBotMessage("🎉 Excellent! You're a cybersecurity pro!");
+                    _chatbotEngine.LogActivity("Achieved excellent quiz score (80%+)");
+                }
                 else if (percentage >= 60)
+                {
                     AddBotMessage("👍 Good job! Keep learning to stay safe online!");
+                    _chatbotEngine.LogActivity("Achieved good quiz score (60-79%)");
+                }
                 else
+                {
                     AddBotMessage("📚 Keep studying! Cybersecurity knowledge is crucial for staying safe.");
+                    _chatbotEngine.LogActivity("Quiz score below 60% - recommended additional study");
+                }
             };
             
             quizWindow.ShowDialog();
@@ -468,6 +493,43 @@ namespace CybersecurityChatbot
         {
             var textRange = new TextRange(MessageRichTextBox.Document.ContentStart, MessageRichTextBox.Document.ContentEnd);
             return textRange.Text?.Trim() ?? "";
+        }
+        
+        private void LoadApiKey()
+        {
+            try
+            {
+                var configPath = "config.json";
+                if (File.Exists(configPath))
+                {
+                    var configJson = File.ReadAllText(configPath);
+                    var config = JsonSerializer.Deserialize<JsonElement>(configJson);
+                    
+                    if (config.TryGetProperty("OpenAI", out var openAiSection) &&
+                        openAiSection.TryGetProperty("ApiKey", out var apiKeyElement))
+                    {
+                        _openAiApiKey = apiKeyElement.GetString() ?? "";
+                        
+                        if (string.IsNullOrEmpty(_openAiApiKey) || _openAiApiKey == "YOUR_OPENAI_API_KEY_HERE")
+                        {
+                            _chatbotEngine.LogActivity("OpenAI API key not configured - ChatGPT features disabled");
+                        }
+                        else
+                        {
+                            _chatbotEngine.LogActivity("OpenAI API key loaded successfully");
+                        }
+                    }
+                }
+                else
+                {
+                    _chatbotEngine.LogActivity("config.json not found - ChatGPT features disabled");
+                }
+            }
+            catch (Exception ex)
+            {
+                _chatbotEngine.LogActivity($"Error loading API key: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error loading API key: {ex.Message}");
+            }
         }
         
         private void LoadChatHistory()

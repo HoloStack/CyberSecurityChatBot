@@ -25,19 +25,31 @@ namespace CybersecurityChatbot
                 // Create a PowerShell script to show the reminder
                 var script = CreateReminderScript(reminderMessage, delayMinutes);
                 
-                // Execute the script
+                // Execute the script with better error handling
                 var scriptPath = Path.Combine(Path.GetTempPath(), $"reminder_{DateTime.Now.Ticks}.ps1");
-                File.WriteAllText(scriptPath, script);
+                
+                // Ensure we can write to temp directory
+                if (!Directory.Exists(Path.GetTempPath()))
+                {
+                    return false;
+                }
+                
+                File.WriteAllText(scriptPath, script, Encoding.UTF8);
 
                 var processInfo = new ProcessStartInfo
                 {
                     FileName = "powershell.exe",
                     Arguments = $"-WindowStyle Hidden -ExecutionPolicy Bypass -File \"{scriptPath}\"",
-                    UseShellExecute = false,
-                    CreateNoWindow = true
+                    UseShellExecute = true,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = false,
+                    RedirectStandardError = false
                 };
 
-                Process.Start(processInfo);
+                using (var process = Process.Start(processInfo))
+                {
+                    // Don't wait for the process to complete since it has a delay
+                }
                 return true;
             }
             catch (Exception ex)

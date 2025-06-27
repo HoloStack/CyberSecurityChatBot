@@ -41,7 +41,7 @@ namespace CybersecurityChatbot
             bool hasSelection = TaskListView.SelectedItem != null;
             EditTaskButton.IsEnabled = hasSelection;
             CompleteTaskButton.IsEnabled = hasSelection && 
-                ((TaskData)TaskListView.SelectedItem)?.Status != "Completed";
+                (TaskListView.SelectedItem as TaskData)?.Status != "Completed";
             DeleteTaskButton.IsEnabled = hasSelection;
         }
 
@@ -88,9 +88,13 @@ namespace CybersecurityChatbot
                 
                 if (taskDialog.ShowDialog() == true)
                 {
+                    var oldTitle = selectedTask.Title;
                     selectedTask.Title = taskDialog.TaskTitle;
                     selectedTask.Description = taskDialog.TaskDescription;
                     selectedTask.ReminderText = taskDialog.ReminderTime;
+                    
+                    // Log the update
+                    engine.LogActivity($"Updated task: '{oldTitle}' → '{selectedTask.Title}'");
                     
                     // Refresh the ListView
                     TaskListView.Items.Refresh();
@@ -121,6 +125,9 @@ namespace CybersecurityChatbot
                 {
                     selectedTask.Status = "Completed";
                     selectedTask.CompletedDate = DateTime.Now;
+                    
+                    // Log the completion
+                    engine.LogActivity($"Completed task: '{selectedTask.Title}'");
                     
                     // Refresh the ListView
                     TaskListView.Items.Refresh();
@@ -156,6 +163,9 @@ namespace CybersecurityChatbot
                 {
                     taskCollection.Remove(selectedTask);
                     originalTasks.Remove(selectedTask);
+                    
+                    // Log the deletion
+                    engine.LogActivity($"Deleted task: '{selectedTask.Title}'");
                     
                     // Save to JSON
                     SaveTasksToJson();

@@ -132,7 +132,17 @@ namespace CybersecurityChatbot
                 IsCorrect = isCorrect
             });
 
-            if (isCorrect) _quizResult.Score++;
+            if (isCorrect) 
+            {
+                _quizResult.Score++;
+                // Could log correct answers if needed
+            }
+            else
+            {
+                // Log incorrect answers for learning tracking
+                System.Diagnostics.Debug.WriteLine($"Quiz: Incorrect answer for '{question.Text}' - Category: {question.Category}");
+            }
+            
             ScoreText.Text = $"Score: {_quizResult.Score} / {_questions.Count}";
         }
 
@@ -258,6 +268,19 @@ namespace CybersecurityChatbot
                 Foreground = Brushes.WhiteSmoke,
                 TextWrapping = TextWrapping.Wrap
             });
+            
+            // Show why explanation for wrong answers
+            if (!result.IsCorrect && !string.IsNullOrWhiteSpace(result.Question.Why))
+            {
+                stack.Children.Add(new TextBlock
+                {
+                    Text = "\n💡 Why this is correct: " + result.Question.Why,
+                    Foreground = Brushes.LightBlue,
+                    FontStyle = FontStyles.Italic,
+                    TextWrapping = TextWrapping.Wrap,
+                    Margin = new Thickness(0, 5, 0, 0)
+                });
+            }
 
             border.Child = stack;
             return border;
