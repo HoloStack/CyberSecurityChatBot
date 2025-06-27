@@ -1,0 +1,304 @@
+{
+  "questions": [
+    {
+      "text": "What is the most effective way to create a strong password?",
+      "options": [
+        "Use your birthday and name",
+        "Use a long, random combination of letters, numbers, and symbols",
+        "Use the same password for all accounts",
+        "Use common dictionary words"
+      ],
+      "correctAnswerIndex": 1,
+      "explanation": "Strong passwords should be long (12+ characters), unique, and contain a mix of uppercase, lowercase, numbers, and symbols.",
+      "category": "Passwords"
+    },
+    {
+      "text": "What is phishing?",
+      "options": [
+        "A type of computer virus",
+        "A method of password encryption",
+        "A fraudulent attempt to obtain sensitive information by pretending to be trustworthy",
+        "A secure communication protocol"
+      ],
+      "correctAnswerIndex": 2,
+      "explanation": "Phishing is a social engineering attack where attackers impersonate legitimate entities to steal sensitive information like passwords or credit card numbers.",
+      "category": "Phishing"
+    },
+    {
+      "text": "What does two-factor authentication (2FA) provide?",
+      "options": [
+        "Faster login speeds",
+        "An additional layer of security beyond just a password",
+        "Automatic password generation",
+        "Encrypted file storage"
+      ],
+      "correctAnswerIndex": 1,
+      "explanation": "2FA adds an extra security layer by requiring something you know (password) and something you have (phone, token) or something you are (biometric).",
+      "category": "Authentication"
+    },
+    {
+      "text": "Which of the following is NOT a type of malware?",
+      "options": [
+        "Trojan horse",
+        "Ransomware",
+        "Firewall",
+        "Spyware"
+      ],
+      "correctAnswerIndex": 2,
+      "explanation": "A firewall is a security tool that protects networks by controlling incoming and outgoing traffic. The others are all types of malicious software.",
+      "category": "Malware"
+    },
+    {
+      "text": "What should you do if you receive a suspicious email asking for personal information?",
+      "options": [
+        "Reply with the requested information immediately",
+        "Forward it to all your contacts",
+        "Delete it or report it as phishing without clicking any links",
+        "Click the links to verify if it's legitimate"
+      ],
+      "correctAnswerIndex": 2,
+      "explanation": "Never provide personal information via email. Legitimate organizations will never ask for sensitive data through email. Always verify through official channels.",
+      "category": "Email Security"
+    },
+    {
+      "text": "What is ransomware?",
+      "options": [
+        "Software that protects against viruses",
+        "Malware that encrypts files and demands payment for decryption",
+        "A tool for creating secure passwords",
+        "A type of antivirus software"
+      ],
+      "correctAnswerIndex": 1,
+      "explanation": "Ransomware is malicious software that encrypts a victim's files and demands payment (ransom) for the decryption key to restore access.",
+      "category": "Malware"
+    },
+    {
+      "text": "Which practice is most important when using public Wi-Fi?",
+      "options": [
+        "Connect to any available network",
+        "Use a VPN and avoid accessing sensitive information",
+        "Share your network credentials with others",
+        "Turn off all security settings for faster connection"
+      ],
+      "correctAnswerIndex": 1,
+      "explanation": "Public Wi-Fi is inherently insecure. Using a VPN encrypts your traffic, and avoiding sensitive activities reduces risk of data interception.",
+      "category": "Network Security"
+    },
+    {
+      "text": "What is social engineering in cybersecurity?",
+      "options": [
+        "Building secure network infrastructure",
+        "Manipulating people to divulge confidential information",
+        "Creating strong encryption algorithms",
+        "Designing user-friendly security interfaces"
+      ],
+      "correctAnswerIndex": 1,
+      "explanation": "Social engineering exploits human psychology rather than technical vulnerabilities to gain unauthorized access to systems or information.",
+      "category": "Social Engineering"
+    },
+    {
+      "text": "How often should you update your software and operating system?",
+      "options": [
+        "Once a year",
+        "Only when it stops working",
+        "As soon as updates are available",
+        "Never, updates can cause problems"
+      ],
+      "correctAnswerIndex": 2,
+      "explanation": "Regular updates patch security vulnerabilities and fix bugs. Delaying updates leaves systems exposed to known threats that attackers can exploit.",
+      "category": "System Security"
+    },
+    {
+      "text": "What is the purpose of a VPN (Virtual Private Network)?",
+      "options": [
+        "To make internet connection faster",
+        "To create a secure, encrypted connection over the internet",
+        "To block all incoming emails",
+        "To automatically backup files"
+      ],
+      "correctAnswerIndex": 1,
+      "explanation": "A VPN creates an encrypted tunnel between your device and a VPN server, protecting your data from interception and hiding your IP address.",
+      "category": "Network Security"
+    },
+    {
+      "text": "Which of the following is a sign that your computer might be infected with malware?",
+      "options": [
+        "Faster boot times",
+        "Improved battery life",
+        "Unexpected pop-ups and slow performance",
+        "Better internet connectivity"
+      ],
+      "correctAnswerIndex": 2,
+      "explanation": "Malware often causes symptoms like slow performance, unexpected pop-ups, unusual network activity, and programs running without permission.",
+      "category": "Malware"
+    },
+    {
+      "text": "What should you do before disposing of an old computer or hard drive?",
+      "options": [
+        "Just delete all files",
+        "Format the hard drive once",
+        "Securely wipe the drive multiple times or physically destroy it",
+        "Remove the operating system only"
+      ],
+      "correctAnswerIndex": 2,
+      "explanation": "Simple deletion or formatting doesn't permanently remove data. Secure wiping overwrites data multiple times, or physical destruction ensures data cannot be recovered.",
+      "category": "Data Security"
+    },
+    {
+      "text": "What is the best way to handle suspicious attachments in emails?",
+      "options": [
+        "Open them immediately to check their contents",
+        "Don't open them; verify with the sender through a different communication method",
+        "Forward them to IT support",
+        "Save them to desktop for later review"
+      ],
+      "correctAnswerIndex": 1,
+      "explanation": "Never open suspicious attachments. Verify with the sender using a different communication method. Many malware infections start with malicious email attachments.",
+      "category": "Email Security"
+    },
+    {
+      "text": "What is the principle of 'least privilege' in cybersecurity?",
+      "options": [
+        "Giving everyone maximum access to simplify management",
+        "Providing users with only the minimum access rights needed to perform their job",
+        "Removing all security restrictions",
+        "Using the same password for all accounts"
+      ],
+      "correctAnswerIndex": 1,
+      "explanation": "Least privilege limits user access rights to the minimum necessary for their role, reducing the potential impact of security breaches.",
+      "category": "Access Control"
+    },
+    {
+      "text": "Which of the following is the most secure way to store important data?",
+      "options": [
+        "Only on your local computer",
+        "Using multiple backups in different locations with encryption",
+        "On a single USB drive",
+        "Printed on paper only"
+      ],
+      "correctAnswerIndex": 1,
+      "explanation": "The 3-2-1 backup rule: 3 copies of data, 2 different storage types, 1 offsite backup. Encryption adds protection if storage media is compromised.",
+      "category": "Data Security"
+    },
+    {
+      "text": "What is a zero-day vulnerability?",
+      "options": [
+        "A vulnerability that takes zero days to exploit",
+        "A security flaw that is unknown to vendors and has no patch available",
+        "A vulnerability that exists for zero days",
+        "A flaw that causes zero damage"
+      ],
+      "correctAnswerIndex": 1,
+      "explanation": "Zero-day vulnerabilities are security flaws unknown to software vendors, making them particularly dangerous as there's no patch available when they're discovered.",
+      "category": "Vulnerabilities"
+    },
+    {
+      "text": "What is the main purpose of encryption?",
+      "options": [
+        "To speed up data transmission",
+        "To compress files to save space",
+        "To convert data into a coded format to prevent unauthorized access",
+        "To create backups of important files"
+      ],
+      "correctAnswerIndex": 2,
+      "explanation": "Encryption transforms readable data into coded format that can only be decrypted with the correct key, protecting it from unauthorized access.",
+      "category": "Encryption"
+    },
+    {
+      "text": "What is a SQL injection attack?",
+      "options": [
+        "Injecting medicine into a computer",
+        "A method to speed up database queries",
+        "Inserting malicious SQL code into application inputs to access or manipulate databases",
+        "A way to backup SQL databases"
+      ],
+      "correctAnswerIndex": 2,
+      "explanation": "SQL injection attacks involve inserting malicious SQL statements into application entry fields to manipulate database operations and potentially access sensitive data.",
+      "category": "Web Security"
+    },
+    {
+      "text": "What is multi-factor authentication (MFA)?",
+      "options": [
+        "Using multiple passwords for one account",
+        "Requiring two or more verification factors to gain access",
+        "Having multiple user accounts",
+        "Using different browsers for security"
+      ],
+      "correctAnswerIndex": 1,
+      "explanation": "MFA requires multiple independent credentials (something you know, have, or are) to verify identity, significantly enhancing security beyond single-factor authentication.",
+      "category": "Authentication"
+    },
+    {
+      "text": "What is a DDoS attack?",
+      "options": [
+        "Distributed Denial of Service - overwhelming a system with traffic",
+        "Direct Download of Software",
+        "Data Destruction on Servers",
+        "Digital Document Scanning"
+      ],
+      "correctAnswerIndex": 0,
+      "explanation": "DDoS attacks flood a target system with massive amounts of traffic from multiple sources, overwhelming its capacity and making it unavailable to legitimate users.",
+      "category": "Network Attacks"
+    },
+    {
+      "text": "What should you do immediately after discovering your account has been compromised?",
+      "options": [
+        "Wait to see what happens",
+        "Change passwords and enable two-factor authentication",
+        "Delete the account completely",
+        "Share the incident on social media"
+      ],
+      "correctAnswerIndex": 1,
+      "explanation": "Immediate action includes changing passwords, enabling 2FA, checking for unauthorized activities, and notifying relevant parties to minimize damage.",
+      "category": "Incident Response"
+    },
+    {
+      "text": "What is the principle of 'defense in depth'?",
+      "options": [
+        "Using only one very strong security measure",
+        "Implementing multiple layers of security controls",
+        "Focusing only on perimeter security",
+        "Relying solely on user education"
+      ],
+      "correctAnswerIndex": 1,
+      "explanation": "Defense in depth involves implementing multiple, overlapping security measures to protect against threats, ensuring that if one layer fails, others provide protection.",
+      "category": "Security Strategy"
+    },
+    {
+      "text": "What is the purpose of a security audit?",
+      "options": [
+        "To find ways to reduce IT costs",
+        "To evaluate and improve an organization's security posture",
+        "To increase network speed",
+        "To train employees on new software"
+      ],
+      "correctAnswerIndex": 1,
+      "explanation": "Security audits systematically evaluate an organization's security policies, procedures, and controls to identify vulnerabilities and ensure compliance with standards.",
+      "category": "Security Management"
+    },
+    {
+      "text": "What is a botnet?",
+      "options": [
+        "A network of robots",
+        "A collection of compromised computers controlled remotely",
+        "A type of antivirus software",
+        "A secure communication network"
+      ],
+      "correctAnswerIndex": 1,
+      "explanation": "A botnet is a network of infected computers (bots) controlled remotely by cybercriminals to perform malicious activities like DDoS attacks or cryptocurrency mining.",
+      "category": "Malware"
+    },
+    {
+      "text": "What is the main risk of using public USB charging stations?",
+      "options": [
+        "Slow charging speed",
+        "Juice jacking - data theft through compromised charging ports",
+        "Overheating your device",
+        "Draining your battery faster"
+      ],
+      "correctAnswerIndex": 1,
+      "explanation": "Juice jacking involves compromised USB ports that can steal data or install malware when you connect your device for charging.",
+      "category": "Mobile Security"
+    }
+  ]
+}

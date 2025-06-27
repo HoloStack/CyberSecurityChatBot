@@ -512,10 +512,17 @@ namespace CybersecurityChatbot
     
     public class TaskData
     {
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Title { get; set; } = "";
         public string Description { get; set; } = "";
         public string ReminderText { get; set; } = "";
         public DateTime CreatedDate { get; set; }
+        public DateTime? DueDate { get; set; }
+        public bool IsCompleted { get; set; } = false;
+        public DateTime? CompletedDate { get; set; }
+        public string Status { get; set; } = "Pending";
+        public string Priority { get; set; } = "Medium";
+        public string Category { get; set; } = "Security";
     }
     
     public class ActivityLogEntry

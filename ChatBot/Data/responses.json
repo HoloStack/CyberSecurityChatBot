@@ -1,0 +1,82 @@
+{
+  "keywordResponses": {
+    "phishing": [
+      "🎣 Be cautious of suspicious emails! Never click links or download attachments from unknown senders. Always verify sender identity through a separate communication channel.",
+      "🛡️ Check URLs carefully before clicking. Legitimate sites use HTTPS. Look for spelling errors in domain names - they're red flags for phishing sites.",
+      "📧 Banks and legitimate companies never ask for passwords or sensitive info via email. When in doubt, contact them directly using official phone numbers.",
+      "🔍 Hover over links to see the real destination. If it doesn't match what's claimed, don't click! Trust your instincts if something feels off."
+    ],
+    "passwords": [
+      "🔐 Create strong passwords with 12+ characters using uppercase, lowercase, numbers, and symbols. Each account should have a unique password!",
+      "💡 Use password managers like Bitwarden, 1Password, or LastPass to generate and store complex passwords securely. You only need to remember one master password.",
+      "🚫 Never use personal information like birthdays, names, or dictionary words. Avoid common patterns like '123456' or 'password123'.",
+      "🔄 Change passwords immediately if you suspect a breach. Enable breach notifications to stay informed about compromised accounts."
+    ],
+    "2fa": [
+      "🔒 Enable two-factor authentication (2FA) on ALL important accounts - email, banking, social media. It's your best defense against account takeovers!",
+      "📱 Use authenticator apps like Google Authenticator, Authy, or Microsoft Authenticator instead of SMS when possible - they're more secure.",
+      "💳 Hardware security keys (like YubiKey) provide the strongest 2FA protection for high-value accounts like banking and work systems.",
+      "📲 Keep backup codes in a safe place! Print them and store securely in case you lose access to your authentication device."
+    ],
+    "malware": [
+      "🦠 Keep your antivirus updated and run regular full system scans. Windows Defender is good, but consider Malwarebytes for additional protection.",
+      "📥 Only download software from official websites or trusted app stores. Avoid pirated software - it's a common malware delivery method.",
+      "🔄 Update your operating system and software regularly. Most malware exploits known vulnerabilities that patches fix.",
+      "⚠️ Watch for warning signs: slow performance, unexpected pop-ups, unknown programs, or unusual network activity. Act quickly if you notice these!"
+    ],
+    "ransomware": [
+      "💾 Backup your data regularly using the 3-2-1 rule: 3 copies, 2 different storage types, 1 offsite. Test your backups monthly!",
+      "🚫 Never pay ransomware demands! There's no guarantee you'll get your data back, and you're funding criminal activity.",
+      "📧 Be extra cautious with email attachments and links. Ransomware often spreads through phishing emails disguised as invoices or documents.",
+      "🔒 Keep your systems updated and use endpoint protection software. Segment your network to limit ransomware spread if infected."
+    ],
+    "vpn": [
+      "🌐 Use a reputable VPN service when on public Wi-Fi. Free VPNs often sell your data - invest in trusted services like ExpressVPN, NordVPN, or Surfshark.",
+      "🏠 VPNs encrypt your internet traffic and hide your IP address, protecting your privacy from ISPs, hackers, and government surveillance.",
+      "⚡ Choose VPN servers close to your location for better speed. Avoid servers in countries with poor privacy laws or data retention requirements.",
+      "🔍 Look for VPNs with no-logs policies, kill switches, and strong encryption (AES-256). Read independent audits before choosing a provider."
+    ],
+    "public wifi": [
+      "📶 Avoid accessing sensitive accounts on public Wi-Fi. If you must, use a VPN and ensure websites use HTTPS (look for the lock icon).",
+      "🎯 Hackers often create fake hotspots with names like 'Free WiFi' to steal your data. Always verify the network name with staff.",
+      "📱 Turn off auto-connect features on your devices. Manually choose networks and forget them when you leave to prevent automatic reconnection.",
+      "🛡️ Use your mobile hotspot instead of public Wi-Fi when possible. It's generally more secure than shared networks."
+    ],
+    "social engineering": [
+      "🎭 Be skeptical of unsolicited contact claiming urgency. Scammers create fake emergencies to pressure you into quick decisions.",
+      "📞 Verify requests for sensitive information by calling back using official contact numbers. Don't trust caller ID - it can be spoofed.",
+      "🕵️ Question authority claims. Real IT support, banks, or government agencies have proper verification processes - they won't ask for passwords over the phone.",
+      "🚨 Trust your instincts! If something feels wrong or too good to be true, it probably is. Take time to verify before acting."
+    ],
+    "updates": [
+      "🔄 Enable automatic updates for your operating system, browsers, and critical software. Most cyberattacks exploit known vulnerabilities.",
+      "⚡ Update immediately when security patches are released. Cybercriminals often exploit vulnerabilities within hours of disclosure.",
+      "📱 Don't forget mobile devices! Update your phone's OS and apps regularly - they're increasingly targeted by attackers.",
+      "💻 Keep firmware updated on routers, smart devices, and IoT gadgets. These are often overlooked but create security weak points."
+    ],
+    "backups": [
+      "💾 Follow the 3-2-1 backup rule: 3 copies total, 2 on different storage types, 1 stored offsite. Cloud storage counts as offsite!",
+      "🔄 Test your backups monthly! A backup that doesn't restore is useless. Practice the restore process before you need it.",
+      "🔒 Encrypt your backups, especially cloud storage. Use strong passwords and consider additional encryption tools for sensitive data.",
+      "⏰ Automate backups whenever possible. Manual backups are often forgotten. Set up scheduled backups for critical data."
+    ],
+    "email": [
+      "📧 Enable email encryption when sending sensitive information. Use services like ProtonMail or Tutanota for confidential communications.",
+      "🔍 Check sender addresses carefully - look for slight misspellings or unusual domains that might indicate spoofing attempts.",
+      "📎 Never open unexpected attachments, even from known contacts. Their account might be compromised. Verify through another channel first.",
+      "🛡️ Use email filtering and anti-spam tools. Mark suspicious emails as spam to train your email provider's filters."
+    ],
+    "social media": [
+      "🔒 Review privacy settings regularly - platforms change them frequently. Limit who can see your posts, photos, and personal information.",
+      "📍 Avoid posting real-time locations or travel plans. Share experiences after you return home to prevent burglary or stalking.",
+      "👥 Be selective with friend/connection requests. Scammers create fake profiles to gather information about you and your network.",
+      "🗣️ Think before you post! Information shared online can be used for social engineering attacks or identity theft years later."
+    ],
+    "mobile": [
+      "📱 Keep your phone's OS and apps updated. Enable automatic updates for security patches and install apps only from official stores.",
+      "🔒 Use strong screen locks - biometrics plus a backup PIN/password. Set auto-lock timeouts to 5 minutes or less.",
+      "📶 Be cautious on public Wi-Fi. Use your mobile data or a VPN app when accessing sensitive information on public networks.",
+      "💳 Enable remote wipe capabilities and location tracking. This helps protect your data if your device is lost or stolen."
+    ]
+  }
+}

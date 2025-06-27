@@ -1,0 +1,27 @@
+<Window x:Class="CybersecurityChatbot.ActivityLogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="📊 Activity Log" 
+        Height="500" Width="700"
+        Background="{StaticResource BackgroundBrush}"
+        WindowStartupLocation="CenterOwner">
+    
+    <Border Style="{StaticResource CardStyle}" Margin="20">
+        <StackPanel>
+            <TextBlock Text="📊 Activity Log" 
+                       FontSize="24" FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Margin="0,50,0,20"/>
+            <TextBlock Text="Your activity history will be displayed here."
+                       FontSize="16"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"
+                       Margin="0,0,0,50"/>
+            <Button Name="CloseButton" Content="Close" 
+                    Style="{StaticResource ModernButtonStyle}"
+                    HorizontalAlignment="Center"
+                    Click="CloseButton_Click"
+                    Width="100"/>
+        </StackPanel>
+    </Border>
+</Window>

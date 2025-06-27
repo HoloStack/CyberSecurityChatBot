@@ -1,0 +1,276 @@
+<Window x:Class="CybersecurityChatbot.QuizWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="🎯 Cybersecurity Knowledge Quiz" 
+        Height="700" Width="900"
+        Background="{StaticResource BackgroundBrush}"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Header -->
+        <Border Grid.Row="0" Background="{StaticResource PrimaryBrush}" Padding="20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBlock Text="🎯" FontSize="32" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                    <StackPanel>
+                        <TextBlock Text="Cybersecurity Knowledge Quiz" 
+                                   FontSize="24" FontWeight="Bold" 
+                                   Foreground="White"/>
+                        <TextBlock Name="SubtitleText" Text="Test your cybersecurity knowledge" 
+                                   FontSize="14" 
+                                   Foreground="#BDC3C7"/>
+                    </StackPanel>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="1">
+                    <TextBlock Name="ScoreText" Text="Score: 0/10" 
+                               FontSize="16" FontWeight="SemiBold"
+                               Foreground="White" HorizontalAlignment="Right"/>
+                    <TextBlock Name="TimerText" Text="Time: 00:00" 
+                               FontSize="14" 
+                               Foreground="#BDC3C7" HorizontalAlignment="Right"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+        
+        <!-- Main Content -->
+        <Grid Grid.Row="1" Margin="20">
+            <!-- Start Screen -->
+            <Border Name="StartScreen" Style="{StaticResource CardStyle}" Visibility="Visible">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="🚀" FontSize="64" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                    <TextBlock Text="Ready to Test Your Knowledge?" 
+                               FontSize="28" FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Foreground="{StaticResource TextBrush}"
+                               Margin="0,0,0,10"/>
+                    <TextBlock Text="This quiz contains 10 randomly selected questions about cybersecurity."
+                               FontSize="16"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center"
+                               Foreground="{StaticResource MutedTextBrush}"
+                               Margin="0,0,0,30"/>
+                    
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,30">
+                        <Border Background="{StaticResource SecondaryBrush}" CornerRadius="20" Padding="15,10" Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="📝" FontSize="16" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBlock Text="10 Questions" FontSize="14" Foreground="White" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="{StaticResource SuccessBrush}" CornerRadius="20" Padding="15,10" Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="⏱️" FontSize="16" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBlock Text="No Time Limit" FontSize="14" Foreground="White" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Background="{StaticResource WarningBrush}" CornerRadius="20" Padding="15,10" Margin="5">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🏆" FontSize="16" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBlock Text="Instant Feedback" FontSize="14" Foreground="White" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                    
+                    <Button Name="StartQuizButton" Content="🚀 Start Quiz" 
+                            Style="{StaticResource ModernButtonStyle}"
+                            FontSize="18" FontWeight="Bold"
+                            Background="{StaticResource SuccessBrush}"
+                            Click="StartQuizButton_Click"
+                            Padding="30,15" Margin="0,0,0,20"/>
+                    
+                    <Button Name="CancelButton" Content="Cancel" 
+                            Style="{StaticResource ModernButtonStyle}"
+                            Background="{StaticResource MutedTextBrush}"
+                            Click="CancelButton_Click"
+                            Width="120"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- Quiz Screen -->
+            <Border Name="QuizScreen" Style="{StaticResource CardStyle}" Visibility="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!-- Progress Bar -->
+                    <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Name="QuestionProgressText" Text="Question 1 of 10" 
+                                       FontSize="16" FontWeight="SemiBold"
+                                       Foreground="{StaticResource TextBrush}"/>
+                            <TextBlock Grid.Column="1" Name="CategoryText" Text="Category: General" 
+                                       FontSize="14" 
+                                       Foreground="{StaticResource MutedTextBrush}"/>
+                        </Grid>
+                        <ProgressBar Name="QuizProgressBar" Height="8" 
+                                     Background="#E0E0E0" 
+                                     Foreground="{StaticResource SecondaryBrush}"
+                                     Value="10" Maximum="100"/>
+                    </StackPanel>
+                    
+                    <!-- Question Content -->
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <!-- Question Text -->
+                            <Border Background="{StaticResource SurfaceBrush}" 
+                                    BorderBrush="{StaticResource SecondaryBrush}" 
+                                    BorderThickness="2" 
+                                    CornerRadius="10" 
+                                    Padding="20" 
+                                    Margin="0,0,0,30">
+                                <TextBlock Name="QuestionText" 
+                                           Text="Sample question text will appear here"
+                                           FontSize="18"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource TextBrush}"
+                                           TextWrapping="Wrap"
+                                           LineHeight="28"/>
+                            </Border>
+                            
+                            <!-- Answer Options -->
+                            <StackPanel Name="AnswerOptionsPanel">
+                                <!-- Answer options will be added dynamically -->
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                    
+                    <!-- Navigation Buttons -->
+                    <Grid Grid.Row="2" Margin="0,20,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Button Name="PreviousButton" Content="⬅️ Previous" 
+                                Grid.Column="0"
+                                Style="{StaticResource ModernButtonStyle}"
+                                Background="{StaticResource MutedTextBrush}"
+                                Click="PreviousButton_Click"
+                                IsEnabled="False"
+                                Width="120"/>
+                        
+                        <TextBlock Grid.Column="1" Name="NavigationHint" 
+                                   Text="Select an answer to continue"
+                                   FontSize="14" 
+                                   Foreground="{StaticResource MutedTextBrush}"
+                                   HorizontalAlignment="Center" 
+                                   VerticalAlignment="Center"/>
+                        
+                        <Button Name="NextButton" Content="Next ➡️" 
+                                Grid.Column="2"
+                                Style="{StaticResource ModernButtonStyle}"
+                                Click="NextButton_Click"
+                                IsEnabled="False"
+                                Width="120"/>
+                    </Grid>
+                </Grid>
+            </Border>
+            
+            <!-- Results Screen -->
+            <Border Name="ResultsScreen" Style="{StaticResource CardStyle}" Visibility="Collapsed">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel HorizontalAlignment="Center">
+                        <!-- Score Display -->
+                        <TextBlock Name="FinalScoreEmoji" Text="🎉" FontSize="80" HorizontalAlignment="Center" Margin="0,20,0,20"/>
+                        <TextBlock Name="FinalScoreText" Text="Great Job!" 
+                                   FontSize="32" FontWeight="Bold"
+                                   HorizontalAlignment="Center"
+                                   Foreground="{StaticResource TextBrush}"
+                                   Margin="0,0,0,10"/>
+                        <TextBlock Name="FinalScoreDetails" Text="You scored 8 out of 10 (80%)" 
+                                   FontSize="20"
+                                   HorizontalAlignment="Center"
+                                   Foreground="{StaticResource MutedTextBrush}"
+                                   Margin="0,0,0,30"/>
+                        
+                        <!-- Performance Message -->
+                        <Border Name="PerformanceBorder" Background="{StaticResource SuccessBrush}" 
+                                CornerRadius="10" Padding="20" Margin="0,0,0,30" MaxWidth="500">
+                            <TextBlock Name="PerformanceMessage" 
+                                       Text="Excellent work! You have a strong understanding of cybersecurity principles."
+                                       FontSize="16"
+                                       Foreground="White"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                        </Border>
+                        
+                        <!-- Time Taken -->
+                        <TextBlock Name="TimeTakenText" Text="Time taken: 2:30" 
+                                   FontSize="14"
+                                   Foreground="{StaticResource MutedTextBrush}"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,30"/>
+                        
+                        <!-- Action Buttons -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button Name="ViewReviewButton" Content="📋 Review Answers" 
+                                    Style="{StaticResource ModernButtonStyle}"
+                                    Background="{StaticResource SecondaryBrush}"
+                                    Click="ViewReviewButton_Click"
+                                    Margin="5" Padding="20,10"/>
+                            <Button Name="RetakeQuizButton" Content="🔄 Take Again" 
+                                    Style="{StaticResource ModernButtonStyle}"
+                                    Background="{StaticResource WarningBrush}"
+                                    Click="RetakeQuizButton_Click"
+                                    Margin="5" Padding="20,10"/>
+                            <Button Name="FinishButton" Content="✅ Finish" 
+                                    Style="{StaticResource ModernButtonStyle}"
+                                    Background="{StaticResource SuccessBrush}"
+                                    Click="FinishButton_Click"
+                                    Margin="5" Padding="20,10"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+            
+            <!-- Review Screen -->
+            <Border Name="ReviewScreen" Style="{StaticResource CardStyle}" Visibility="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Text="📋 Answer Review" 
+                               FontSize="24" FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Foreground="{StaticResource TextBrush}"
+                               Margin="0,0,0,20"/>
+                    
+                    <ScrollViewer Grid.Row="1" Name="ReviewScrollViewer" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Name="ReviewPanel">
+                            <!-- Review items will be added dynamically -->
+                        </StackPanel>
+                    </ScrollViewer>
+                    
+                    <Button Grid.Row="2" Name="BackToResultsButton" Content="⬅️ Back to Results" 
+                            Style="{StaticResource ModernButtonStyle}"
+                            HorizontalAlignment="Center"
+                            Click="BackToResultsButton_Click"
+                            Margin="0,20,0,0" Width="180"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
